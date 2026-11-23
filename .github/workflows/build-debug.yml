@@ -14,11 +14,14 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           validate-wrappers: false
-      - name: Create temporary test keystore
+      - name: Setup test keystore and API secrets
+        env:
+          TG_API_ID: ${{ secrets.TG_API_ID }}
+          TG_API_HASH: ${{ secrets.TG_API_HASH }}
         run: |
           rm -f TMessagesProj/release.keystore
           keytool -genkeypair -v -keystore TMessagesProj/release.keystore -alias key0 -keyalg RSA -keysize 2048 -validity 10000 -storepass 123456 -keypass 123456 -dname "CN=ZemaChat,O=Test,C=ET"
-          printf "KEYSTORE_PASS=123456\nALIAS_NAME=key0\nALIAS_PASS=123456\n" > local.properties
+          printf "KEYSTORE_PASS=123456\nALIAS_NAME=key0\nALIAS_PASS=123456\nTELEGRAM_APP_ID=%s\nTELEGRAM_APP_HASH=%s\n" "$TG_API_ID" "$TG_API_HASH" > local.properties
       - run: chmod +x gradlew
       - run: ./gradlew assembleDebug --no-daemon
       - uses: actions/upload-artifact@v4
