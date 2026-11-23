@@ -14,17 +14,20 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           validate-wrappers: false
-      - name: Setup test keystore and API secrets
+      - name: Setup keystore and API secrets
         env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASS: ${{ secrets.KEYSTORE_PASS }}
+          ALIAS_NAME: ${{ secrets.ALIAS_NAME }}
+          ALIAS_PASS: ${{ secrets.ALIAS_PASS }}
           TG_API_ID: ${{ secrets.TG_API_ID }}
           TG_API_HASH: ${{ secrets.TG_API_HASH }}
         run: |
-          rm -f TMessagesProj/release.keystore
-          keytool -genkeypair -v -keystore TMessagesProj/release.keystore -alias key0 -keyalg RSA -keysize 2048 -validity 10000 -storepass 123456 -keypass 123456 -dname "CN=ZemaChat,O=Test,C=ET"
-          printf "KEYSTORE_PASS=123456\nALIAS_NAME=key0\nALIAS_PASS=123456\nTELEGRAM_APP_ID=%s\nTELEGRAM_APP_HASH=%s\n" "$TG_API_ID" "$TG_API_HASH" > local.properties
+          echo "$KEYSTORE_BASE64" | tr -d '\n\r ' | base64 -d > TMessagesProj/release.keystore
+          printf "KEYSTORE_PASS=%s\nALIAS_NAME=%s\nALIAS_PASS=%s\nTELEGRAM_APP_ID=%s\nTELEGRAM_APP_HASH=%s\n" "$KEYSTORE_PASS" "$ALIAS_NAME" "$ALIAS_PASS" "$TG_API_ID" "$TG_API_HASH" > local.properties
       - run: chmod +x gradlew
       - run: ./gradlew assembleDebug --no-daemon
       - uses: actions/upload-artifact@v4
         with:
-          name: debug-apk
+          name: signed-apk
           path: '**/build/outputs/apk/**/*.apk'
