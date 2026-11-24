@@ -307,6 +307,18 @@ public class Browser {
         if (context == null || uri == null) {
             return;
         }
+        String urlStr = uri.toString();
+        if (com.zemachat.WatchHereHelper.isWatchableVideoLink(urlStr)) {
+            if (com.zemachat.WatchHereHelper.showWatchHereDialog(context, urlStr, () ->
+                openUrlInternal(context, uri, _allowCustom, tryTelegraph, forceNotInternalForApps, inCaseLoading, browser, allowIntent, allowInAppBrowser, forceRequest)
+            )) {
+                return;
+            }
+        }
+        openUrlInternal(context, uri, _allowCustom, tryTelegraph, forceNotInternalForApps, inCaseLoading, browser, allowIntent, allowInAppBrowser, forceRequest);
+    }
+
+    private static void openUrlInternal(final Context context, Uri uri, boolean _allowCustom, boolean tryTelegraph, boolean forceNotInternalForApps, Progress inCaseLoading, String browser, boolean allowIntent, boolean allowInAppBrowser, boolean forceRequest) {
         final int currentAccount = UserConfig.selectedAccount;
         boolean[] forceBrowser = new boolean[]{false};
         boolean internalUri = isInternalUri(uri, forceBrowser);
