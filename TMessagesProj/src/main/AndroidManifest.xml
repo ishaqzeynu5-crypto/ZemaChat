@@ -800,19 +800,6 @@
             android:foregroundServiceType="dataSync"
         />
 
-<!--        <receiver android:name=".FeedWidgetProvider"-->
-<!--            android:exported="true">-->
-<!--            <meta-data android:name="android.appwidget.provider"-->
-<!--                android:resource="@xml/feed_widget_info" />-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />-->
-<!--            </intent-filter>-->
-<!--        </receiver>-->
-
-<!--        <service android:name=".FeedWidgetService"-->
-<!--            android:permission="android.permission.BIND_REMOTEVIEWS"-->
-<!--            android:exported="false" />-->
-
         <service android:name=".UnifiedPushService"
             android:exported="false">
             <intent-filter>
@@ -850,8 +837,6 @@
         <meta-data android:name="com.sec.android.multiwindow.MINIMUM_SIZE_W" android:value="632dp" />
         <meta-data android:name="com.sec.android.multiwindow.MINIMUM_SIZE_H" android:value="598dp" />
 
-        <!--<meta-data android:name="com.google.android.gms.wallet.api.enabled" android:value="true" />-->
-
         <meta-data android:name="com.google.android.gms.car.notification.SmallIcon" android:resource="@drawable/ic_player" />
         <meta-data android:name="com.google.android.gms.car.application" android:resource="@xml/automotive_app_desc" />
 
@@ -869,8 +854,6 @@
             android:name="androidx.car.app.minCarApiLevel"
             android:value="7" />
 
-        <!--<meta-data android:name="com.google.android.gms.vision.DEPENDENCIES" android:value="face,barcode" />-->
-
         <meta-data android:name="android.max_aspect" android:value="2.5" />
         <meta-data
             android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
@@ -883,11 +866,18 @@
         <profileable
             android:shell="true"
             tools:targetApi="q" />
+
         <activity
             android:name="com.zemachat.SocialBrowserActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize"
-            android:exported="false"
-            android:theme="@android:style/Theme.NoTitleBar" />
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_nagram"
+            android:label="Zema Social"
+            android:theme="@android:style/Theme.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 </manifest>
-        
