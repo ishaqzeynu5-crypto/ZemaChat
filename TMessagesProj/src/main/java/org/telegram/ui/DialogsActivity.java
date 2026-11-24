@@ -3269,8 +3269,6 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         ActionBarMenu menu = actionBar.createMenu();
         menu.setTranslationX(-dp(5));
         searchItem = menu.addItem(0, R.drawable.outline_header_search).setIsSearchField(true, false);
-        ActionBarMenuItem zemaItem = menu.addItem(991, R.drawable.ic_ab_other);
-        zemaItem.setOnClickListener(v -> com.zemachat.ZemaHubHelper.showMenu(getParentActivity() != null ? getParentActivity() : v.getContext()));
         searchItem.setOnClickListener(v -> {
             showSearch(true, false, true);
             fragmentSearchFieldWatcher.toggleSearch(true);
@@ -13996,6 +13994,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             args.putLong("user_id", UserConfig.getInstance(currentAccount).getClientUserId());
             presentFragment(new ChatActivity(args));
         });
+        io.add(R.drawable.outline_saved_24, "Zema Tools", () -> com.zemachat.ZemaHubHelper.showMenu(getParentActivity()));
         io.addIf(NekoConfig.showGhostToggleInDrawer, R.drawable.icon_ghost, getString(R.string.GhostMode), () -> {
             presentFragment(new NekoGhostModeActivity());
         });
