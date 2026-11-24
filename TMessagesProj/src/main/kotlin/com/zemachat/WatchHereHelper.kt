@@ -17,14 +17,17 @@ object WatchHereHelper {
 
     @JvmStatic
     fun showWatchHereDialog(context: Context, url: String, onOpenNormal: Runnable): Boolean {
-        if (context !is Activity || context.isFinishing || context.isDestroyed) {
+        var c: Context? = context
+        while (c is android.content.ContextWrapper && c !is Activity) { c = c.baseContext }
+        val act = c as? Activity
+        if (act == null || act.isFinishing || act.isDestroyed) {
             return false
         }
-        AlertDialog.Builder(context)
+        AlertDialog.Builder(act)
             .setTitle("Watch Video")
             .setMessage(url)
             .setPositiveButton("Watch here") { _, _ ->
-                SocialBrowserActivity.open(context, url)
+                SocialBrowserActivity.open(act, url)
             }
             .setNegativeButton("Open normally") { _, _ ->
                 onOpenNormal.run()
