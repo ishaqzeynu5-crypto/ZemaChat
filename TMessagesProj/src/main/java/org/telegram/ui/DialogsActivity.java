@@ -4867,6 +4867,20 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         contentView.addView(floatingButtonStories, FragmentFloatingButton.createSubButtonLayoutParams());
 
         floatingButton3 = new FragmentFloatingButton(context, resourceProvider);
+        android.widget.TextView zemaSocialFab = new android.widget.TextView(context);
+        zemaSocialFab.setText("Social");
+        zemaSocialFab.setTextColor(0xFFD4AF37);
+        zemaSocialFab.setTextSize(14f);
+        zemaSocialFab.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
+        zemaSocialFab.setPadding(dp(16), dp(10), dp(16), dp(10));
+        android.graphics.drawable.GradientDrawable gd = new android.graphics.drawable.GradientDrawable();
+        gd.setColor(0xFF1A1A1A);
+        gd.setCornerRadius(dp(22));
+        gd.setStroke(dp(1), 0xFFD4AF37);
+        zemaSocialFab.setBackground(gd);
+        zemaSocialFab.setElevation(dp(4));
+        zemaSocialFab.setOnClickListener(v -> com.zemachat.SocialBrowserActivity.Companion.open(v.getContext(), null));
+        contentView.addView(zemaSocialFab, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, Gravity.LEFT | Gravity.BOTTOM, 16, 0, 0, 92));
         contentView.addView(floatingButton3, FragmentFloatingButton.createDefaultLayoutParams());
         floatingButton3.setOnClickListener(v -> {
             if (parentLayout != null && parentLayout.isInPreviewMode()) {
