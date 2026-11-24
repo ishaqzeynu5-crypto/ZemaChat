@@ -2881,6 +2881,15 @@ public class ChatActivityEnterView extends FrameLayout implements
                     return super.dispatchTouchEvent(event);
                 }
             };
+            attachButton.setOnLongClickListener(v -> {
+                com.zemachat.QuickRepliesHelper.showPickerDialog(v.getContext(), text -> {
+                    if (messageEditText != null) {
+                        messageEditText.setText(text);
+                        sendMessage();
+                    }
+                });
+                return true;
+            });
             attachButton.setScaleType(ImageView.ScaleType.CENTER);
             attachButton.setColorFilter(new PorterDuffColorFilter(getThemedColor(Theme.key_glass_defaultIcon), PorterDuff.Mode.MULTIPLY));
             attachButton.setImageResource(R.drawable.msg_input_attach2);

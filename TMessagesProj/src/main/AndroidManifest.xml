@@ -884,5 +884,6 @@
             android:exported="false"
             android:label="Zema Watermark"
             android:theme="@android:style/Theme.NoTitleBar" />
+        <activity android:name="com.zemachat.QuickRepliesActivity" android:exported="false" android:label="Zema Quick Replies" android:theme="@android:style/Theme.DeviceDefault.NoActionBar" />
     </application>
 </manifest>
