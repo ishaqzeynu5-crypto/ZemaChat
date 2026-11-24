@@ -9418,6 +9418,9 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
         if (bitmap == null) {
             bitmap = ImageLoader.loadBitmap(path, imageUri, 800, 800, true);
         }
+        if (bitmap != null) {
+            bitmap = com.zemachat.WatermarkHelper.applyWatermarkIfEnabled(ApplicationLoader.applicationContext, bitmap);
+        }
         ArrayList<TLRPC.PhotoSize> sizes = new ArrayList<>();
         TLRPC.PhotoSize size = ImageLoader.scaleAndSaveImage(bitmap, 90, 90, 55, true);
         if (size != null) {
