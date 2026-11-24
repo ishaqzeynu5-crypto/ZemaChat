@@ -87,12 +87,14 @@ class SocialBrowserActivity : Activity() {
         desktopBtn = makeIconBtn("🖥") { toggleDesktopMode() }
         val openExtBtn = makeIconBtn("↗") { openInExternalBrowser() }
         val addBtn = makeIconBtn("＋") { showAddShortcutDialog() }
+        val wmBtn = makeIconBtn("⚙") { WatermarkSettingsActivity.open(this) }
 
         toolbar.addView(backBtn)
         toolbar.addView(titleView)
         toolbar.addView(desktopBtn)
         toolbar.addView(openExtBtn)
         toolbar.addView(addBtn)
+        toolbar.addView(wmBtn)
         root.addView(toolbar)
 
         // Shortcuts bar
