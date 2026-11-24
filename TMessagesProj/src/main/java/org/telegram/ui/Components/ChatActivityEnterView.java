@@ -2881,7 +2881,8 @@ public class ChatActivityEnterView extends FrameLayout implements
                     return super.dispatchTouchEvent(event);
                 }
             };
-            attachButton.setOnLongClickListener(v -> {
+            attachButton.setLongClickable(true);
+        attachButton.setOnLongClickListener(v -> {
                 com.zemachat.QuickRepliesHelper.showPickerDialog(v.getContext(), text -> {
                     if (messageEditText != null) {
                         messageEditText.setText(text);
