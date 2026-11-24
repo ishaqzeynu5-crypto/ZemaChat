@@ -13995,6 +13995,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             presentFragment(new ChatActivity(args));
         });
         io.add(R.drawable.outline_saved_24, "Zema Tools", () -> com.zemachat.ZemaHubHelper.showMenu(getParentActivity()));
+        io.add(R.drawable.outline_saved_24, "Zema Tools", () -> com.zemachat.ZemaHubHelper.showMenu(getParentActivity()));
         io.addIf(NekoConfig.showGhostToggleInDrawer, R.drawable.icon_ghost, getString(R.string.GhostMode), () -> {
             presentFragment(new NekoGhostModeActivity());
         });
