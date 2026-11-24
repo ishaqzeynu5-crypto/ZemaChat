@@ -174,9 +174,7 @@ object NaConfig {
         addConfig(
             "CustomTitle",
             ConfigItem.configTypeString,
-            LocaleController.getString(
-                R.string.NekoX
-            )
+            "Zema Chat"
         )
     val useSystemUnlock =
         addConfig(
