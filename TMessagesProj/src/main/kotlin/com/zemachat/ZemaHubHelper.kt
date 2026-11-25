@@ -58,6 +58,11 @@ object ZemaHubHelper {
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(i)
         }
+        addOption("Ghost Mode", "Hide online, read receipts & typing status") {
+            val i = Intent(context, ZemaGhostActivity::class.java)
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(i)
+        }
         val dlg = AlertDialog.Builder(context, android.R.style.Theme_DeviceDefault_Dialog_Alert)
             .setTitle("Zema Tools")
             .setView(box)

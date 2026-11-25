@@ -4710,7 +4710,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             } else if (position == faqRow) {
                 Browser.openUrl(getParentActivity(), NekoXConfig.FAQ_URL);
             } else if (position == policyRow) {
-                Browser.openUrl(getParentActivity(), "https://nagram.app/privacy/");
+                Browser.openUrl(getParentActivity(), "https://t.me/mameethiopia");
             } else if (position == sendLogsRow) {
                 sendLogs(getParentActivity(), false);
             } else if (position == sendLastLogsRow) {
@@ -4863,7 +4863,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     updateListAnimated(false);
                 });
                 o.add(R.drawable.msg_retry, LocaleController.getString(R.string.SwitchVersion), () -> {
-                    Browser.openUrl(ProfileActivity.this.getParentActivity(), "https://github.com/NextAlone/Nagram/releases");
+                    Browser.openUrl(ProfileActivity.this.getParentActivity(), "https://github.com/ishaqzeynu5-crypto/ZemaChat/releases");
                 });
 
                 o.add(R.drawable.msg_search, LocaleController.getString(R.string.CheckUpdate), () -> {

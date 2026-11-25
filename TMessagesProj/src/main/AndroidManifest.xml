@@ -894,5 +894,6 @@
         <activity android:name="com.zemachat.QuickRepliesActivity" android:exported="false" android:label="Zema Quick Replies" android:theme="@android:style/Theme.DeviceDefault.NoActionBar" />
         <activity android:name="com.zemachat.PriceCardActivity" android:exported="false" android:label="Price Card" android:theme="@android:style/Theme.DeviceDefault.NoActionBar" />
         <activity android:name="com.zemachat.WaasEscrowActivity" android:exported="false" android:label="Waas Escrow" android:theme="@android:style/Theme.DeviceDefault.NoActionBar" />
+        <activity android:name="com.zemachat.ZemaGhostActivity" android:exported="false" android:label="Zema Ghost Mode" android:theme="@android:style/Theme.DeviceDefault.NoActionBar" />
     </application>
 </manifest>

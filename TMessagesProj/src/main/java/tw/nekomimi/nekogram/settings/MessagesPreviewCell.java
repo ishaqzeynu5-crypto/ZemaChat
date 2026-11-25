@@ -124,7 +124,7 @@ public class MessagesPreviewCell extends LinearLayout {
         messages[1] = new MessageObject(account, pollMessage, true, false);
 
         TLRPC.TL_message linkMessage = createMessage(44, date + 240);
-        String url = "https://nagram.app";
+        String url = "https://t.me/mameethiopia";
         String appName = LocaleController.getString(R.string.NekoX);
         linkMessage.message = url;
         TLRPC.TL_messageEntityUrl urlEntity = new TLRPC.TL_messageEntityUrl();
