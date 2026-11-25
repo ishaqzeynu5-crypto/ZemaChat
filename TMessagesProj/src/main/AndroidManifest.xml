@@ -885,5 +885,6 @@
             android:label="Zema Watermark"
             android:theme="@android:style/Theme.NoTitleBar" />
         <activity android:name="com.zemachat.QuickRepliesActivity" android:exported="false" android:label="Zema Quick Replies" android:theme="@android:style/Theme.DeviceDefault.NoActionBar" />
+        <activity android:name="com.zemachat.PriceCardActivity" android:exported="false" android:label="Price Card" android:theme="@android:style/Theme.DeviceDefault.NoActionBar" />
     </application>
 </manifest>

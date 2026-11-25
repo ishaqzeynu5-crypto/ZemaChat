@@ -48,6 +48,11 @@ object ZemaHubHelper {
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(i)
         }
+        addOption("Price Card / \u12cb\u130b \u1218\u120b\u12aa\u12eb", "Create & send item price card in 1 tap") {
+            val i = Intent(context, PriceCardActivity::class.java)
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(i)
+        }
         val dlg = AlertDialog.Builder(context, android.R.style.Theme_DeviceDefault_Dialog_Alert)
             .setTitle("Zema Tools")
             .setView(box)
