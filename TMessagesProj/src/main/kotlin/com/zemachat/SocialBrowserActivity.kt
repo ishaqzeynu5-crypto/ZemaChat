@@ -161,6 +161,7 @@ class SocialBrowserActivity : Activity() {
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
+                view?.evaluateJavascript("(function(){try{Object.defineProperty(document,'hidden',{get:function(){return false;},configurable:true});Object.defineProperty(document,'visibilityState',{get:function(){return 'visible';},configurable:true});document.addEventListener('visibilitychange',function(e){e.stopImmediatePropagation();},true);}catch(e){}})();", null)
                 CookieManager.getInstance().flush()
             }
         }
