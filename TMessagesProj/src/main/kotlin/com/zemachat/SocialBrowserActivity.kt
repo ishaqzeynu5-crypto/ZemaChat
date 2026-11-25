@@ -133,9 +133,7 @@ class SocialBrowserActivity : Activity() {
         setContentView(root)
         renderShortcuts()
 
-        val initialUrl = intent.getStringExtra(EXTRA_URL)
-            ?: shortcuts.firstOrNull()?.url
-            ?: "https://www.google.com"
+        val initialUrl = intent.getStringExtra(EXTRA_URL) ?: "https://www.google.com"
         loadUrlSmart(initialUrl)
     }
 
@@ -179,9 +177,15 @@ class SocialBrowserActivity : Activity() {
     }
 
     private fun loadUrlSmart(url: String) {
-        if (url.contains("tiktok.com", ignoreCase = true)) {
+        val socialHosts = listOf("facebook.com", "fb.com", "tiktok.com", "instagram.com", "youtube.com", "youtu.be", "x.com", "twitter.com", "whatsapp.com", "linkedin.com", "pinterest.com", "reddit.com", "snapchat.com")
+        if (socialHosts.any { url.contains(it, ignoreCase = true) }) {
             try {
-                val i = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) }
+                val i = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    if (android.os.Build.VERSION.SDK_INT >= 30) {
+                        addFlags(Intent.FLAG_ACTIVITY_REQUIRE_NON_BROWSER)
+                    }
+                }
                 startActivity(i)
                 return
             } catch (_: Exception) {}
