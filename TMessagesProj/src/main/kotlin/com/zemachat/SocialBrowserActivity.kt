@@ -177,6 +177,30 @@ class SocialBrowserActivity : Activity() {
     }
 
     private fun loadUrlSmart(url: String) {
+        if (url.contains("tiktok.com", ignoreCase = true)) {
+            for (pkg in listOf("com.zhiliaoapp.musically", "com.ss.android.ugc.trill", "com.zhiliaoapp.musically.go")) {
+                val launch = packageManager.getLaunchIntentForPackage(pkg)
+                if (launch != null) {
+                    try {
+                        if (url.contains("/video/") || url.contains("vm.tiktok.com") || url.contains("vt.tiktok.com")) {
+                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply { setPackage(pkg); addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
+                        } else {
+                            launch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            startActivity(launch)
+                        }
+                        return
+                    } catch (_: Exception) {}
+                }
+            }
+        }
+        if (url.contains("whatsapp.com", ignoreCase = true)) {
+            for (pkg in listOf("com.whatsapp", "com.whatsapp.w4b")) {
+                val launch = packageManager.getLaunchIntentForPackage(pkg)
+                if (launch != null) {
+                    try { launch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); startActivity(launch); return } catch (_: Exception) {}
+                }
+            }
+        }
         val socialHosts = listOf("facebook.com", "fb.com", "tiktok.com", "instagram.com", "youtube.com", "youtu.be", "x.com", "twitter.com", "whatsapp.com", "linkedin.com", "pinterest.com", "reddit.com", "snapchat.com")
         if (socialHosts.any { url.contains(it, ignoreCase = true) }) {
             try {

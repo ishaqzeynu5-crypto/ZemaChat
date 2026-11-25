@@ -3,11 +3,15 @@ package com.zemachat
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.InputType
+import android.util.Base64
 import android.view.Gravity
 import android.view.View
 import android.widget.Button
@@ -19,6 +23,7 @@ import android.widget.Toast
 import org.json.JSONObject
 import org.telegram.messenger.UserConfig
 import java.io.BufferedReader
+import java.io.ByteArrayOutputStream
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
@@ -31,6 +36,12 @@ class WaasEscrowActivity : Activity() {
     companion object {
         private const val BASE_URL = "https://waas-server.onrender.com"
         private const val PREFS = "zema_waas_prefs"
+        private val SLOT_LABELS = mapOf(
+            1 to "1. Chat Screenshot",
+            2 to "2. Item Photo 1",
+            3 to "3. Material/Back 2",
+            4 to "4. Extra / Package"
+        )
     }
 
     private val io = Executors.newSingleThreadExecutor()
@@ -40,6 +51,8 @@ class WaasEscrowActivity : Activity() {
     private lateinit var tabCreate: TextView
     private lateinit var tabOrder: TextView
     private lateinit var tabAdmin: TextView
+    private val pickedPhotos = mutableMapOf<Int, String>()
+    private val photoButtons = mutableMapOf<Int, Button>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,6 +112,38 @@ class WaasEscrowActivity : Activity() {
         showCreateTab()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        val slot = requestCode - 700
+        if (resultCode == RESULT_OK && slot in 1..4) {
+            val uri = data?.data ?: return
+            io.execute {
+                val dataUrl = encodeUriToDataUrl(uri)
+                main.post {
+                    if (dataUrl != null) {
+                        pickedPhotos[slot] = dataUrl
+                        photoButtons[slot]?.text = "[OK] " + (SLOT_LABELS[slot] ?: "Photo $slot")
+                        statusTv.text = "Photo $slot attached (${pickedPhotos.size}/4)"
+                    } else {
+                        Toast.makeText(this, "Could not read photo", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun encodeUriToDataUrl(uri: Uri): String? {
+        return try {
+            val src = contentResolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it) } ?: return null
+            val max = 800
+            val scale = if (src.width > max || src.height > max) max.toFloat() / maxOf(src.width, src.height) else 1f
+            val bmp = if (scale < 1f) Bitmap.createScaledBitmap(src, (src.width * scale).toInt(), (src.height * scale).toInt(), true) else src
+            val bos = ByteArrayOutputStream()
+            bmp.compress(Bitmap.CompressFormat.JPEG, 72, bos)
+            "data:image/jpeg;base64," + Base64.encodeToString(bos.toByteArray(), Base64.NO_WRAP)
+        } catch (_: Exception) { null }
+    }
+
     private fun makeTab(label: String, onClick: () -> Unit) = TextView(this).apply {
         text = label
         gravity = Gravity.CENTER
@@ -133,7 +178,7 @@ class WaasEscrowActivity : Activity() {
         setBackgroundColor(Color.parseColor(if (gold) "#D4AF37" else "#2A2A2A"))
         setTextColor(Color.parseColor(if (gold) "#121212" else "#D4AF37"))
         val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        lp.bottomMargin = dp(10)
+        lp.bottomMargin = dp(8)
         layoutParams = lp
         setOnClickListener { onClick() }
     }
@@ -200,6 +245,9 @@ class WaasEscrowActivity : Activity() {
     private fun showCreateTab() {
         highlightTab(tabCreate)
         contentBox.removeAllViews()
+        pickedPhotos.clear()
+        photoButtons.clear()
+
         val itemEt = field("Item Name")
         val priceEt = field("Price (ETB)", true)
         val delivEt = field("Delivery Fee (ETB)", true, "0")
@@ -207,11 +255,27 @@ class WaasEscrowActivity : Activity() {
         val resultTv = TextView(this).apply { setTextColor(Color.WHITE); textSize = 13f; setPadding(0, dp(8), 0, dp(8)) }
         var lastCard = ""
 
-        val sendBtn = btn("Send Order Card to Chat", false) {
+        val sendBtn = btn("Send Order Card (WhatsApp / Telegram)", false) {
             if (lastCard.isBlank()) return@btn
             val i = Intent(Intent.ACTION_SEND).apply { type = "text/plain"; putExtra(Intent.EXTRA_TEXT, lastCard) }
             startActivity(Intent.createChooser(i, "Send Waas Order"))
         }.apply { visibility = View.GONE }
+
+        contentBox.addView(itemEt); contentBox.addView(priceEt); contentBox.addView(delivEt); contentBox.addView(routeEt)
+        contentBox.addView(TextView(this).apply {
+            text = "Seller Proof Photos (Optional, up to 4):"
+            setTextColor(Color.parseColor("#D4AF37"))
+            textSize = 13f
+            setPadding(0, dp(4), 0, dp(6))
+        })
+        for (slot in 1..4) {
+            val b = btn("+ " + (SLOT_LABELS[slot] ?: "Photo $slot"), false) {
+                val pick = Intent(Intent.ACTION_GET_CONTENT).apply { type = "image/*" }
+                startActivityForResult(Intent.createChooser(pick, "Pick Photo $slot"), 700 + slot)
+            }
+            photoButtons[slot] = b
+            contentBox.addView(b)
+        }
 
         val createBtn = btn("Create Live Escrow Order") {
             val item = itemEt.text.toString().trim()
@@ -219,10 +283,15 @@ class WaasEscrowActivity : Activity() {
             val deliv = delivEt.text.toString().trim().ifEmpty { "0" }
             val route = routeEt.text.toString().trim()
             if (item.isEmpty() || price.isEmpty()) { Toast.makeText(this, "Enter item and price", Toast.LENGTH_SHORT).show(); return@btn }
-            runApi("Creating order on Waas server (may take 20s if waking)...") {
+            val photosSnapshot = pickedPhotos.toMap()
+            runApi("Creating order & uploading ${photosSnapshot.size} photo(s)...") {
                 val tok = ensureToken()
                 val res = rawRequest("POST", "/orders", JSONObject().put("item", item).put("price", price).put("delivery", deliv).put("route", route), tok, null)
                 val oid = res.getString("id")
+                for ((slot, dataUrl) in photosSnapshot) {
+                    main.post { statusTv.text = "Uploading photo $slot..." }
+                    rawRequest("POST", "/orders/$oid/photos", JSONObject().put("slot", slot).put("label", SLOT_LABELS[slot] ?: "Photo $slot").put("data_url", dataUrl), tok, null)
+                }
                 val am = res.getJSONObject("amounts")
                 val pi = res.optJSONObject("payment_instructions")
                 val card = buildString {
@@ -235,17 +304,16 @@ class WaasEscrowActivity : Activity() {
                         append("Bank: ").append(pi.optString("bank_name")).append("\n")
                         append("Account: ").append(pi.optString("account_number")).append(" (").append(pi.optString("account_name")).append(")\n")
                     }
-                    append("Pay & Track Link: https://waas-server.onrender.com/order/").append(oid).append("\nOpen link in browser (WhatsApp / Telegram / Zema Chat)")
+                    append("View Photos, Pay & Track: https://waas-server.onrender.com/order/").append(oid)
                 }
                 main.post {
-                    statusTv.text = "Order Created: $oid"
+                    statusTv.text = "Order Created ($oid) with ${photosSnapshot.size} photo(s)!"
                     lastCard = card
                     resultTv.text = card
                     sendBtn.visibility = View.VISIBLE
                 }
             }
         }
-        contentBox.addView(itemEt); contentBox.addView(priceEt); contentBox.addView(delivEt); contentBox.addView(routeEt)
         contentBox.addView(createBtn); contentBox.addView(resultTv); contentBox.addView(sendBtn)
     }
 
@@ -271,14 +339,7 @@ class WaasEscrowActivity : Activity() {
                     info.append("Item: ").append(o.optString("item")).append("\n")
                     info.append("Buyer Total: ").append(am.getJSONObject("buyer_total").getString("etb")).append(" ETB\n")
                     info.append("Seller Payout: ").append(am.getJSONObject("seller_payout").getString("etb")).append(" ETB\n")
-                    val pi = o.optJSONObject("payment_instructions")
-                    if (pi != null) {
-                        info.append("\nPay directly via CBE:\n")
-                        info.append(pi.optString("bank_name")).append("\n")
-                        info.append("Acc: ").append(pi.optString("account_number")).append("\n")
-                        info.append("Name: ").append(pi.optString("account_name")).append("\n")
-                        info.append("Amount: ").append(pi.optString("amount_etb")).append(" ETB\n")
-                    }
+                    info.append("Web Link: https://waas-server.onrender.com/order/").append(oid).append("\n")
                     detailsBox.addView(TextView(this).apply { text = info.toString(); setTextColor(Color.WHITE); setBackgroundColor(Color.parseColor("#1A1A1A")); setPadding(dp(12), dp(12), dp(12), dp(12)) })
 
                     if (st == "OPEN" && role != "seller") {
@@ -288,7 +349,7 @@ class WaasEscrowActivity : Activity() {
                             val ft = ftEt.text.toString().trim()
                             runApi("Submitting CBE FT ref...") {
                                 val r = rawRequest("POST", "/orders/$oid/pay", JSONObject().put("ft_ref", ft), ensureToken(), null)
-                                main.post { statusTv.text = "Submitted FT: ${r.optString("ft_ref")} (Waiting Admin Confirm)"; Toast.makeText(this, "Submitted! Waiting for admin confirmation.", Toast.LENGTH_LONG).show() }
+                                main.post { statusTv.text = "Submitted FT: ${r.optString("ft_ref")} (Waiting Admin Confirm)"; Toast.makeText(this, "Submitted!", Toast.LENGTH_LONG).show() }
                             }
                         })
                     }
