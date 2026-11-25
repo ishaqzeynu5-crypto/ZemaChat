@@ -53,6 +53,11 @@ object ZemaHubHelper {
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(i)
         }
+        addOption("Waas Escrow / \u12cb\u1235 (Live)", "Direct CBE Escrow: Create, Pay, OTP & Admin") {
+            val i = Intent(context, WaasEscrowActivity::class.java)
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(i)
+        }
         val dlg = AlertDialog.Builder(context, android.R.style.Theme_DeviceDefault_Dialog_Alert)
             .setTitle("Zema Tools")
             .setView(box)
