@@ -209,7 +209,7 @@ class WaasEscrowActivity : Activity() {
 
         val sendBtn = btn("Send Order Card to Chat", false) {
             if (lastCard.isBlank()) return@btn
-            val i = Intent(Intent.ACTION_SEND).apply { type = "text/plain"; putExtra(Intent.EXTRA_TEXT, lastCard); setPackage(packageName) }
+            val i = Intent(Intent.ACTION_SEND).apply { type = "text/plain"; putExtra(Intent.EXTRA_TEXT, lastCard) }
             startActivity(Intent.createChooser(i, "Send Waas Order"))
         }.apply { visibility = View.GONE }
 
@@ -235,7 +235,7 @@ class WaasEscrowActivity : Activity() {
                         append("Bank: ").append(pi.optString("bank_name")).append("\n")
                         append("Account: ").append(pi.optString("account_number")).append(" (").append(pi.optString("account_name")).append(")\n")
                     }
-                    append("Open Zema Tools -> Waas Escrow -> Order tab and paste Order ID to pay & track.")
+                    append("Pay & Track Link: https://waas-server.onrender.com/order/").append(oid).append("\nOpen link in browser (WhatsApp / Telegram / Zema Chat)")
                 }
                 main.post {
                     statusTv.text = "Order Created: $oid"

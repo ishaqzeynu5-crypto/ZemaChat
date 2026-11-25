@@ -179,6 +179,17 @@ class SocialBrowserActivity : Activity() {
     }
 
     private fun loadUrlSmart(url: String) {
+        if (url.contains("tiktok.com", ignoreCase = true)) {
+            for (pkg in listOf("com.zhiliaoapp.musically", "com.ss.android.ugc.trill")) {
+                try {
+                    if (packageManager.getLaunchIntentForPackage(pkg) != null) {
+                        val i = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply { setPackage(pkg) }
+                        startActivity(i)
+                        return
+                    }
+                } catch (_: Exception) {}
+            }
+        }
         val needsDesktop = url.contains("web.whatsapp.com", ignoreCase = true)
         if (needsDesktop && !desktopMode) {
             setDesktopMode(true, reload = false)
