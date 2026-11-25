@@ -190,6 +190,18 @@ class SocialBrowserActivity : Activity() {
                 return
             } catch (_: Exception) {}
         }
+        if (socialHosts.any { url.contains(it, ignoreCase = true) }) {
+            try {
+                val i = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    if (android.os.Build.VERSION.SDK_INT >= 30) {
+                        addFlags(Intent.FLAG_ACTIVITY_REQUIRE_NON_BROWSER)
+                    }
+                }
+                startActivity(i)
+                return
+            } catch (_: Exception) {}
+        }
         val needsDesktop = url.contains("web.whatsapp.com", ignoreCase = true)
         if (needsDesktop && !desktopMode) {
             setDesktopMode(true, reload = false)
