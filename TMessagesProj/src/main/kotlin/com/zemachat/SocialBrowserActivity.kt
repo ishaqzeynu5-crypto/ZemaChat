@@ -118,7 +118,11 @@ class SocialBrowserActivity : Activity() {
         root.addView(progressBar)
 
         // WebView
-        webView = WebView(this).apply {
+        webView = object : WebView(this) {
+            override fun onWindowVisibilityChanged(visibility: Int) {
+                super.onWindowVisibilityChanged(View.VISIBLE)
+            }
+        }.apply {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f
             )
