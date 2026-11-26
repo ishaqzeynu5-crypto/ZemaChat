@@ -19208,6 +19208,7 @@ public class MessagesController extends BaseController implements NotificationCe
                 }
                 dialogs_read_outbox_max.put(dialogId, Math.max(value, update.max_id));
             } else if (baseUpdate instanceof TL_update.TL_updateDeleteMessages) {
+                if (com.zemachat.ZemaGhostHelper.isKeepDeleted(ApplicationLoader.applicationContext)) { continue; }
                 TL_update.TL_updateDeleteMessages update = (TL_update.TL_updateDeleteMessages) baseUpdate;
                 if (deletedMessages == null) {
                     deletedMessages = new LongSparseArray<>();
@@ -19733,6 +19734,7 @@ public class MessagesController extends BaseController implements NotificationCe
                 }
                 dialogs_read_outbox_max.put(dialogId, Math.max(value, update.max_id));
             } else if (baseUpdate instanceof TL_update.TL_updateDeleteChannelMessages) {
+                if (com.zemachat.ZemaGhostHelper.isKeepDeleted(ApplicationLoader.applicationContext)) { continue; }
                 TL_update.TL_updateDeleteChannelMessages update = (TL_update.TL_updateDeleteChannelMessages) baseUpdate;
                 if (BuildVars.LOGS_ENABLED) {
                     FileLog.d(baseUpdate + " channelId = " + update.channel_id);
