@@ -4881,6 +4881,23 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         zemaSocialFab.setElevation(dp(4));
         zemaSocialFab.setOnClickListener(v -> com.zemachat.SocialBrowserActivity.Companion.open(v.getContext(), null));
         contentView.addView(zemaSocialFab, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, Gravity.LEFT | Gravity.BOTTOM, 16, 0, 0, 92));
+        android.widget.TextView zemaWaasFab = new android.widget.TextView(context);
+        zemaWaasFab.setText("Waas");
+        zemaWaasFab.setTextColor(0xFF121212);
+        zemaWaasFab.setTextSize(14f);
+        zemaWaasFab.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
+        zemaWaasFab.setPadding(dp(16), dp(10), dp(16), dp(10));
+        android.graphics.drawable.GradientDrawable gdW = new android.graphics.drawable.GradientDrawable();
+        gdW.setColor(0xFFD4AF37);
+        gdW.setCornerRadius(dp(22));
+        zemaWaasFab.setBackground(gdW);
+        zemaWaasFab.setElevation(dp(4));
+        zemaWaasFab.setOnClickListener(v -> {
+            android.content.Intent wi = new android.content.Intent(v.getContext(), com.zemachat.WaasEscrowActivity.class);
+            wi.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK);
+            v.getContext().startActivity(wi);
+        });
+        contentView.addView(zemaWaasFab, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, Gravity.LEFT | Gravity.BOTTOM, 108, 0, 0, 92));
         contentView.addView(floatingButton3, FragmentFloatingButton.createDefaultLayoutParams());
         floatingButton3.setOnClickListener(v -> {
             if (parentLayout != null && parentLayout.isInPreviewMode()) {
@@ -14008,8 +14025,8 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             args.putLong("user_id", UserConfig.getInstance(currentAccount).getClientUserId());
             presentFragment(new ChatActivity(args));
         });
-        io.add(R.drawable.outline_saved_24, "Zema Tools", () -> com.zemachat.ZemaHubHelper.showMenu(getParentActivity()));
-        io.add(R.drawable.outline_saved_24, "Zema Tools", () -> com.zemachat.ZemaHubHelper.showMenu(getParentActivity()));
+        io.add(R.drawable.outline_saved_24, "Football Scores", () -> com.zemachat.SocialBrowserActivity.Companion.open(getParentActivity(), "https://www.sofascore.com"));
+        io.add(R.drawable.outline_saved_24, "Football Scores", () -> com.zemachat.SocialBrowserActivity.Companion.open(getParentActivity(), "https://www.sofascore.com"));
         io.addIf(NekoConfig.showGhostToggleInDrawer, R.drawable.icon_ghost, getString(R.string.GhostMode), () -> {
             presentFragment(new NekoGhostModeActivity());
         });

@@ -14,6 +14,9 @@ object ZemaGhostHelper {
     fun setHideOnline(ctx: Context, v: Boolean) { ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putBoolean("hide_online", v).apply() }
     fun setHideRead(ctx: Context, v: Boolean) { ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putBoolean("hide_read", v).apply() }
     fun setHideTyping(ctx: Context, v: Boolean) { ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putBoolean("hide_typing", v).apply() }
+    @JvmStatic
+    fun isKeepDeleted(ctx: Context?): Boolean = ctx?.getSharedPreferences(PREFS, Context.MODE_PRIVATE)?.getBoolean("keep_deleted", true) ?: false
+    fun setKeepDeleted(ctx: Context, v: Boolean) { ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putBoolean("keep_deleted", v).apply() }
 
     @JvmStatic
     fun filterRequest(obj: TLObject?): Boolean {

@@ -4697,6 +4697,26 @@ public class ChatActivity extends BaseFragment implements
                 userFull = getMessagesController().getUserFull(currentUser.id);
             }
             headerItem = menu.addItem(chat_menu_options, otherIcon);
+        ActionBarMenuSubItem zemaQuickReplySub = headerItem.addSubItem(992, R.drawable.msg_reply, "Quick Replies");
+        zemaQuickReplySub.setOnClickListener(v -> {
+            headerItem.closeSubMenu();
+            com.zemachat.QuickRepliesHelper.showPickerDialog(v.getContext(), text -> {
+                if (chatActivityEnterView != null && chatActivityEnterView.getEditField() != null) {
+                    chatActivityEnterView.getEditField().setText(text);
+                    chatActivityEnterView.sendMessage();
+                }
+            });
+        });
+        ActionBarMenuSubItem zemaWatermarkSub = headerItem.addSubItem(993, R.drawable.msg_photos, "Photo Watermark");
+        zemaWatermarkSub.setOnClickListener(v -> {
+            headerItem.closeSubMenu();
+            v.getContext().startActivity(new android.content.Intent(v.getContext(), com.zemachat.WatermarkSettingsActivity.class));
+        });
+        ActionBarMenuSubItem zemaPriceSub = headerItem.addSubItem(994, R.drawable.msg_send, "Price Card");
+        zemaPriceSub.setOnClickListener(v -> {
+            headerItem.closeSubMenu();
+            v.getContext().startActivity(new android.content.Intent(v.getContext(), com.zemachat.PriceCardActivity.class));
+        });
             headerItem.setSubMenuDelegate(new ActionBarMenuItem.ActionBarSubMenuItemDelegate() {
                 @Override
                 public void onShowSubMenu() {

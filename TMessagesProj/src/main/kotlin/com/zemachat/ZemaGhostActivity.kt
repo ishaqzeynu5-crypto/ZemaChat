@@ -66,6 +66,7 @@ class ZemaGhostActivity : Activity() {
         addToggle("Don't Send Read Receipts", "Read messages without sending blue double-check", ZemaGhostHelper.isHideRead(this)) { ZemaGhostHelper.setHideRead(this, it) }
         addToggle("Hide Typing Status", "Hide 'typing...' and 'recording...' indicators", ZemaGhostHelper.isHideTyping(this)) { ZemaGhostHelper.setHideTyping(this, it) }
 
+        addToggle("Save Deleted Messages & Photos", "Keep text and photos even if deleted by others", ZemaGhostHelper.isKeepDeleted(this)) { ZemaGhostHelper.setKeepDeleted(this, it) }
         root.addView(body)
         setContentView(root)
     }

@@ -762,6 +762,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
         }
 
         items.add(SettingCell.Factory.of(100, 0xFF1BA4ED, 0xFF1488E1, R.drawable.msg_settings, getString(R.string.N_Config)));
+        items.add(SettingCell.Factory.of(101, 0xFFD4AF37, 0xFFB8922A, R.drawable.msg_secret, "Zema Ghost Mode"));
         items.add(UItem.asShadow(null));
 
         items.add(SettingCell.Factory.of(1, IconBackgroundColors.BLUE.top, IconBackgroundColors.BLUE.bottom, R.drawable.settings_account, getString(R.string.SettingsAccount), getString(R.string.SettingsAccountInfo)));
@@ -986,6 +987,11 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                 presentFragment(new NekoSettingsActivity());
                 break;
             }
+                case 101: {
+                    android.content.Context ctx = getParentActivity();
+                    if (ctx != null) { ctx.startActivity(new android.content.Intent(ctx, com.zemachat.ZemaGhostActivity.class)); }
+                    break;
+                }
         }
     }
 
