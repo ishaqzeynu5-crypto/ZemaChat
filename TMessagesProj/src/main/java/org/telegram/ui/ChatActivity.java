@@ -4697,7 +4697,7 @@ public class ChatActivity extends BaseFragment implements
                 userFull = getMessagesController().getUserFull(currentUser.id);
             }
             headerItem = menu.addItem(chat_menu_options, otherIcon);
-        ActionBarMenuSubItem zemaQuickReplySub = headerItem.addSubItem(992, R.drawable.msg_reply, "Quick Replies");
+        ActionBarMenuSubItem zemaQuickReplySub = headerItem.addSubItem(992, R.drawable.msg_send, "Quick Replies");
         zemaQuickReplySub.setOnClickListener(v -> {
             headerItem.closeSubMenu();
             com.zemachat.QuickRepliesHelper.showPickerDialog(v.getContext(), text -> {
